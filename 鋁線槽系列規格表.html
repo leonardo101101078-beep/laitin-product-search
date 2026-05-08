@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>萊廷照明 鋁線槽系列規格表</title>
+<style>
+/* ─── CSS 變數 ─── */
+:root {
+  --bg-base:    #0d1117;
+  --bg-surface: #161b22;
+  --bg-card:    #21262d;
+  --bg-hover:   #2d333b;
+  --border:     #30363d;
+  --text:       #e6edf3;
+  --text-muted: #8b949e;
+  --text-code:  #79c0ff;
+  --accent:     #58a6ff;
+  --price:      #7ee787;
+  --warn-bg:    #3d2b00;
+  --warn-text:  #e3b341;
+  --warn-border:#7d4e00;
+  --cat-active: #388bfd;
+  --cat-active-text: #ffffff;
+  --copy-ok:    #3fb950;
+  --header-bg:  #0f2035;
+  --pill-text:  #7d8590;
+}
+
+/* ─── Reset / Base ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: "微軟正黑體", "Microsoft JhengHei", "PingFang TC", system-ui, sans-serif;
+  background: var(--bg-base);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ─── Header ─── */
+header {
+  background: var(--header-bg);
+  border-bottom: 1px solid #1c3a5c;
+  padding: 20px 24px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 16px rgba(0,0,0,.6);
+}
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: .04em;
+}
+header h2 {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+/* ─── Controls ─── */
+.controls {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px 24px 0;
+}
+.search-wrap {
+  position: relative;
+  margin-bottom: 12px;
+}
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  font-size: 15px;
+}
+#searchInput {
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  padding: 9px 12px 9px 36px;
+  outline: none;
+  transition: border-color .15s;
+}
+#searchInput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(88,166,255,.15);
+}
+#searchInput::placeholder { color: var(--text-muted); }
+
+/* ─── Category Filters ─── */
+.cat-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.cat-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--pill-text);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 4px 12px;
+  transition: background .12s, color .12s, border-color .12s;
+  white-space: nowrap;
+}
+.cat-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+  border-color: #8b949e;
+}
+.cat-btn.active {
+  background: var(--cat-active);
+  border-color: var(--cat-active);
+  color: var(--cat-active-text);
+  font-weight: 600;
+}
+
+/* ─── Stats bar ─── */
+.stats-bar {
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: 4px 0 12px;
+}
+.stats-bar strong { color: var(--text); }
+
+/* ─── Table wrapper ─── */
+.table-wrap {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead tr {
+  background: var(--bg-card);
+  position: sticky;
+  top: 68px;
+  z-index: 50;
+}
+th {
+  padding: 10px 12px;
+  text-align: left;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  user-select: none;
+}
+th.sortable {
+  cursor: pointer;
+}
+th.sortable:hover { color: var(--text); }
+th.sorted-asc::after  { content: " ▲"; color: var(--accent); }
+th.sorted-desc::after { content: " ▼"; color: var(--accent); }
+th:not(.sorted-asc):not(.sorted-desc).sortable::after { content: " ⇅"; opacity: .3; }
+
+td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+tbody tr:hover td { background: var(--bg-hover) !important; }
+
+/* row colours */
+tr.row-even td { background: var(--bg-surface); }
+tr.row-odd  td { background: var(--bg-base); }
+tr.row-warn td {
+  background: var(--warn-bg) !important;
+  border-bottom-color: var(--warn-border);
+}
+tr.row-warn:hover td { background: #4d3800 !important; }
+
+/* ─── Cell styles ─── */
+.cell-code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  color: var(--text-code);
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  font-size: 12.5px;
+}
+.cell-code:hover { text-decoration: underline; }
+
+.copy-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: var(--copy-ok);
+  color: #000;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 18px;
+  border-radius: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s, transform .2s;
+  z-index: 999;
+}
+.copy-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.cell-price {
+  color: var(--price);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.cell-unit { color: var(--text-muted); font-size: 12px; }
+.cell-dim  { color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cell-dim-dash { color: var(--text-muted); }
+
+.cat-pill {
+  display: inline-block;
+  background: rgba(88,166,255,.1);
+  border: 1px solid rgba(88,166,255,.25);
+  border-radius: 12px;
+  color: var(--accent);
+  font-size: 11px;
+  padding: 1px 8px;
+  white-space: nowrap;
+}
+
+.note-warn { color: var(--warn-text); font-size: 12px; }
+.note-ok   { color: var(--text-muted); font-size: 12px; }
+
+/* ─── Empty state ─── */
+.empty-state {
+  text-align: center;
+  padding: 60px 0;
+  color: var(--text-muted);
+}
+.empty-state svg { margin-bottom: 12px; opacity: .3; }
+
+/* ─── Footer ─── */
+footer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px 24px 40px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+footer span { white-space: nowrap; }
+footer strong { color: var(--text); }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+@media (max-width: 768px) {
+  header { padding: 14px 16px 12px; }
+  .controls { padding: 12px 16px 0; }
+  .table-wrap { padding: 0 0 40px; }
+  header h1 { font-size: 17px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>萊廷照明</h1>
+    <h2>鋁線槽系列規格表</h2>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input id="searchInput" type="search"
+           placeholder="搜尋料號、品名、備註...（ESC 清除）"
+           autocomplete="off" spellcheck="false">
+  </div>
+  <div class="cat-row">
+    <button class="cat-btn active" data-cat="">全部</button>
+      <button class="cat-btn" data-cat="LED鋁線槽">LED鋁線槽</button>
+      <button class="cat-btn" data-cat="鋁線槽">鋁線槽</button>
+      <button class="cat-btn" data-cat="PVC穿線管">PVC穿線管</button>
+      <button class="cat-btn" data-cat="PVC穿線管配件">PVC穿線管配件</button>
+      <button class="cat-btn" data-cat="波浪管">波浪管</button>
+      <button class="cat-btn" data-cat="大型鋁線槽">大型鋁線槽</button>
+      <button class="cat-btn" data-cat="LED燈槽">LED燈槽</button>
+      <button class="cat-btn" data-cat="LED線槽">LED線槽</button>
+      <button class="cat-btn" data-cat="彎型鋁線槽">彎型鋁線槽</button>
+      <button class="cat-btn" data-cat="LED燈條線槽">LED燈條線槽</button>
+  </div>
+  <div class="stats-bar">
+    顯示 <strong id="countShown">-</strong> / <strong>110</strong> 筆
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table id="productTable">
+    <thead>
+      <tr>
+        <th class="sortable" data-col="code">料號</th>
+        <th>品名</th>
+        <th>類別</th>
+        <th class="sortable" data-col="w">外寬×高 (mm)</th>
+        <th class="sortable" data-col="depth">深 (mm)</th>
+        <th class="sortable" data-col="price">定價 (NT$)</th>
+        <th>單位</th>
+        <th>型錄頁</th>
+        <th>備註</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+  <div id="emptyState" class="empty-state" style="display:none">
+    <div style="font-size:40px;margin-bottom:8px">🔍</div>
+    <div>找不到符合條件的產品</div>
+    <div style="margin-top:6px;font-size:11px">請試試其他關鍵字或清除篩選</div>
+  </div>
+</div>
+
+<footer>
+  <span><strong>顏色代碼：</strong> V = 白色 &nbsp;|&nbsp; S = 黑色 &nbsp;|&nbsp; B1 = 黑色 &nbsp;|&nbsp; B2 = 白色</span>
+  <span><strong>尺寸說明：</strong> 外寬×高 為產品外框尺寸（mm），深為線槽溝深</span>
+  <span style="color:#e3b341"><strong>⚠ 備註：</strong> 標黃色列表示尺寸資料需對照原 PDF 確認</span>
+  <span><strong>點擊料號</strong>可複製到剪貼簿</span>
+</footer>
+
+<div class="copy-toast" id="copyToast">已複製 ✓</div>
+
+<script>
+const PRODUCTS = [{"cat_page": "002", "cat": "LED鋁線槽", "code": "HB128", "name": "LED鋁線槽（附燈條）", "w": null, "h": null, "depth": 21.0, "price": 2500, "unit": "/M", "note": "白光6000K / 自然光4000K / 暖光3000K", "warn": false}, {"cat_page": "002", "cat": "LED鋁線槽", "code": "HB128X", "name": "端蓋", "w": null, "h": null, "depth": null, "price": 100, "unit": "/個", "note": "HB128 專用", "warn": false}, {"cat_page": "003", "cat": "鋁線槽", "code": "HB381A", "name": "鋁線槽（附蓋）", "w": 97.0, "h": 68.0, "depth": 21.0, "price": 1800, "unit": "/M", "note": "", "warn": false}, {"cat_page": "003", "cat": "鋁線槽", "code": "HB011", "name": "鋁線槽（附蓋）", "w": 97.0, "h": 68.0, "depth": 21.0, "price": 1500, "unit": "/M", "note": "", "warn": false}, {"cat_page": "003", "cat": "鋁線槽", "code": "HB188", "name": "鋁線槽（附蓋）", "w": 81.0, "h": 79.0, "depth": 31.0, "price": 1500, "unit": "/M", "note": "", "warn": false}, {"cat_page": "003", "cat": "鋁線槽", "code": "HB381", "name": "鋁線槽（附蓋）", "w": 63.0, "h": 55.0, "depth": 23.0, "price": 2200, "unit": "/M", "note": "", "warn": false}, {"cat_page": "003", "cat": "鋁線槽", "code": "HB381B", "name": "鋁線槽（附蓋）", "w": 89.0, "h": 73.0, "depth": 23.0, "price": 2500, "unit": "/M", "note": "", "warn": false}, {"cat_page": "004", "cat": "鋁線槽", "code": "HB139A", "name": "扁型鋁線槽 A款（平蓋）", "w": 245.0, "h": 29.9, "depth": 21.0, "price": 1500, "unit": "/M", "note": "", "warn": false}, {"cat_page": "004", "cat": "鋁線槽", "code": "HB139B", "name": "扁型鋁線槽 B款（斜蓋）", "w": 245.0, "h": 29.9, "depth": 21.0, "price": 2000, "unit": "/M", "note": "", "warn": false}, {"cat_page": "004", "cat": "鋁線槽", "code": "HB186", "name": "鋁線槽（深型）", "w": 227.0, "h": 46.0, "depth": 41.0, "price": 1800, "unit": "/M", "note": "另有61mm深度版本", "warn": false}, {"cat_page": "004", "cat": "鋁線槽", "code": "HB10049", "name": "鋁線槽（大）", "w": 227.0, "h": 46.0, "depth": null, "price": 2500, "unit": "/M", "note": "", "warn": false}, {"cat_page": "005", "cat": "鋁線槽", "code": "HB016", "name": "鋁線槽", "w": 55.0, "h": 44.0, "depth": 23.0, "price": 1400, "unit": "/M", "note": "", "warn": false}, {"cat_page": "005", "cat": "鋁線槽", "code": "HB137", "name": "鋁線槽", "w": 52.0, "h": 62.0, "depth": 21.0, "price": 1200, "unit": "/M", "note": "", "warn": false}, {"cat_page": "005", "cat": "鋁線槽", "code": "HB4418", "name": "穿線槽（小型）", "w": null, "h": null, "depth": null, "price": 800, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "005", "cat": "鋁線槽", "code": "HB138", "name": "鋁線槽", "w": 40.6, "h": 49.3, "depth": 21.0, "price": 1300, "unit": "/M", "note": "", "warn": false}, {"cat_page": "006", "cat": "鋁線槽", "code": "HB198", "name": "方形鋁線槽（附蓋）", "w": 96.0, "h": 96.0, "depth": 9.0, "price": 1500, "unit": "/M", "note": "", "warn": false}, {"cat_page": "006", "cat": "鋁線槽", "code": "HB085", "name": "方形鋁線槽", "w": 96.0, "h": 96.0, "depth": null, "price": 1500, "unit": "/M", "note": "", "warn": false}, {"cat_page": "006", "cat": "鋁線槽", "code": "HG21", "name": "附蓋鋁線槽", "w": null, "h": null, "depth": null, "price": 1800, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "007", "cat": "鋁線槽", "code": "HB003", "name": "鋁線槽（白色/黑色）", "w": 61.0, "h": 48.0, "depth": null, "price": 1500, "unit": "/M", "note": "", "warn": false}, {"cat_page": "007", "cat": "鋁線槽", "code": "CN001", "name": "鋁線槽（白色/黑色）", "w": 69.0, "h": 69.0, "depth": null, "price": 1800, "unit": "/M", "note": "", "warn": false}, {"cat_page": "007", "cat": "鋁線槽", "code": "HB195A", "name": "白色穿線管", "w": null, "h": null, "depth": null, "price": 1200, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "007", "cat": "鋁線槽", "code": "9036B", "name": "斜口穿線管", "w": 90.0, "h": 36.0, "depth": null, "price": 1200, "unit": "/M", "note": "", "warn": false}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L0809V", "name": "PVC穿線管 白色", "w": 9.0, "h": 10.0, "depth": 6.0, "price": 150, "unit": "/M", "note": "", "warn": false}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L0809S", "name": "PVC穿線管 黑色", "w": 9.0, "h": 10.0, "depth": 6.0, "price": 160, "unit": "/M", "note": "", "warn": false}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L1010V", "name": "PVC穿線管 白色", "w": 21.0, "h": 21.0, "depth": 9.0, "price": 150, "unit": "/M", "note": "", "warn": false}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L1010S", "name": "PVC穿線管 黑色", "w": 21.0, "h": 21.0, "depth": 9.0, "price": 160, "unit": "/M", "note": "", "warn": false}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L1210V", "name": "PVC穿線管 白色", "w": null, "h": null, "depth": null, "price": 180, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L1210S", "name": "PVC穿線管 黑色", "w": null, "h": null, "depth": null, "price": 200, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L1510V", "name": "PVC穿線管 白色", "w": null, "h": null, "depth": null, "price": 200, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L1510S", "name": "PVC穿線管 黑色", "w": null, "h": null, "depth": null, "price": 220, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L1712V", "name": "PVC穿線管 白色", "w": null, "h": null, "depth": null, "price": 250, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L1712S", "name": "PVC穿線管 黑色", "w": null, "h": null, "depth": null, "price": 300, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L2010V", "name": "PVC穿線管 白色", "w": 31.0, "h": 21.0, "depth": null, "price": 280, "unit": "/M", "note": "", "warn": false}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L2010S", "name": "PVC穿線管 黑色", "w": 31.0, "h": 21.0, "depth": null, "price": 320, "unit": "/M", "note": "", "warn": false}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L2020V", "name": "PVC穿線管 白色", "w": 41.0, "h": 31.0, "depth": 31.0, "price": 450, "unit": "/M", "note": "", "warn": false}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L2020S", "name": "PVC穿線管 黑色", "w": 41.0, "h": 31.0, "depth": 31.0, "price": 500, "unit": "/M", "note": "", "warn": false}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L3020V", "name": "PVC穿線管 白色", "w": 61.0, "h": 31.0, "depth": 31.0, "price": 650, "unit": "/M", "note": "", "warn": false}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L3020S", "name": "PVC穿線管 黑色", "w": 61.0, "h": 31.0, "depth": 31.0, "price": 700, "unit": "/M", "note": "", "warn": false}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L5020V", "name": "PVC穿線管 白色", "w": null, "h": null, "depth": null, "price": 750, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L5020S", "name": "PVC穿線管 黑色", "w": null, "h": null, "depth": null, "price": 800, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L121", "name": "PVC穿線管 白色", "w": 31.0, "h": 26.0, "depth": 28.0, "price": 300, "unit": "/M", "note": "", "warn": false}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L617V", "name": "PVC穿線管 白色", "w": null, "h": null, "depth": null, "price": 350, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "008", "cat": "PVC穿線管", "code": "L617S", "name": "PVC穿線管 黑色", "w": null, "h": null, "depth": null, "price": 400, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "008", "cat": "PVC穿線管配件", "code": "加蓋片", "name": "PVC穿線管加蓋片", "w": null, "h": null, "depth": null, "price": 50, "unit": "/個", "note": "適用各型穿線管", "warn": false}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L3535V", "name": "PVC穿線管 白色", "w": 51.0, "h": 46.0, "depth": 31.0, "price": 900, "unit": "/M", "note": "", "warn": false}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L3535S", "name": "PVC穿線管 黑色", "w": 51.0, "h": 46.0, "depth": 31.0, "price": 1000, "unit": "/M", "note": "", "warn": false}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L4035V", "name": "PVC穿線管 白色", "w": 61.0, "h": 46.0, "depth": 31.0, "price": 1000, "unit": "/M", "note": "", "warn": false}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L4035S", "name": "PVC穿線管 黑色", "w": 61.0, "h": 46.0, "depth": 31.0, "price": 1100, "unit": "/M", "note": "", "warn": false}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L5035V", "name": "PVC穿線管 白色", "w": 71.0, "h": 46.0, "depth": 31.0, "price": 1100, "unit": "/M", "note": "", "warn": false}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L5035S", "name": "PVC穿線管 黑色", "w": 71.0, "h": 46.0, "depth": 31.0, "price": 1200, "unit": "/M", "note": "", "warn": false}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L6035V", "name": "PVC穿線管 白色", "w": 81.0, "h": 46.0, "depth": 31.0, "price": 1300, "unit": "/M", "note": "", "warn": false}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L6035S", "name": "PVC穿線管 黑色", "w": 81.0, "h": 46.0, "depth": 31.0, "price": 1450, "unit": "/M", "note": "", "warn": false}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L7035V", "name": "PVC穿線管 白色", "w": null, "h": null, "depth": null, "price": 1550, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L7035S", "name": "PVC穿線管 黑色", "w": null, "h": null, "depth": null, "price": 1700, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L8035V", "name": "PVC穿線管 白色", "w": null, "h": null, "depth": null, "price": 1800, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L8035S", "name": "PVC穿線管 黑色", "w": null, "h": null, "depth": null, "price": 2000, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L0035V", "name": "PVC穿線管 白色", "w": null, "h": null, "depth": null, "price": 2200, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L0035S", "name": "PVC穿線管 黑色", "w": null, "h": null, "depth": null, "price": 2400, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L118", "name": "PVC穿線管", "w": null, "h": null, "depth": 6.0, "price": 650, "unit": "/M", "note": "", "warn": false}, {"cat_page": "009", "cat": "PVC穿線管", "code": "L118A", "name": "PVC穿線管", "w": null, "h": null, "depth": 6.0, "price": 650, "unit": "/M", "note": "", "warn": false}, {"cat_page": "010", "cat": "波浪管", "code": "L509B1", "name": "波浪管 黑色", "w": null, "h": null, "depth": null, "price": 300, "unit": "/M", "note": "", "warn": false}, {"cat_page": "010", "cat": "波浪管", "code": "L509B2", "name": "波浪管 白色", "w": null, "h": null, "depth": null, "price": 350, "unit": "/M", "note": "", "warn": false}, {"cat_page": "010", "cat": "波浪管", "code": "L505B1", "name": "波浪管 黑色", "w": 28.5, "h": 23.5, "depth": null, "price": 400, "unit": "/M", "note": "", "warn": false}, {"cat_page": "010", "cat": "波浪管", "code": "L505B2", "name": "波浪管 白色", "w": 28.5, "h": 23.5, "depth": null, "price": 450, "unit": "/M", "note": "", "warn": false}, {"cat_page": "010", "cat": "波浪管", "code": "L617B1", "name": "波浪管 黑色", "w": 30.0, "h": 20.0, "depth": null, "price": 400, "unit": "/M", "note": "", "warn": false}, {"cat_page": "010", "cat": "波浪管", "code": "L617B2", "name": "波浪管 白色", "w": 30.0, "h": 20.0, "depth": null, "price": 450, "unit": "/M", "note": "", "warn": false}, {"cat_page": "010", "cat": "波浪管", "code": "L616B1", "name": "波浪管 黑色", "w": null, "h": null, "depth": null, "price": 450, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "010", "cat": "波浪管", "code": "L616B2", "name": "波浪管 白色", "w": null, "h": null, "depth": null, "price": 500, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "010", "cat": "波浪管", "code": "L123B1", "name": "波浪管 黑色", "w": 25.0, "h": 7.0, "depth": null, "price": 500, "unit": "/M", "note": "", "warn": false}, {"cat_page": "010", "cat": "波浪管", "code": "L123B2", "name": "波浪管 白色", "w": 25.0, "h": 7.0, "depth": null, "price": 550, "unit": "/M", "note": "", "warn": false}, {"cat_page": "010", "cat": "波浪管", "code": "L613B1", "name": "波浪管 黑色", "w": null, "h": null, "depth": null, "price": 350, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "010", "cat": "波浪管", "code": "L613B2", "name": "波浪管 白色", "w": null, "h": null, "depth": null, "price": 400, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "010", "cat": "波浪管", "code": "L223B1", "name": "波浪管 黑色", "w": 43.0, "h": 20.0, "depth": null, "price": 450, "unit": "/M", "note": "", "warn": false}, {"cat_page": "010", "cat": "波浪管", "code": "L223B2", "name": "波浪管 白色", "w": 43.0, "h": 20.0, "depth": null, "price": 600, "unit": "/M", "note": "", "warn": false}, {"cat_page": "010", "cat": "波浪管", "code": "L508B1", "name": "波浪管 黑色", "w": 30.0, "h": 20.0, "depth": null, "price": 600, "unit": "/M", "note": "", "warn": false}, {"cat_page": "010", "cat": "波浪管", "code": "L508B2", "name": "波浪管 白色", "w": 30.0, "h": 20.0, "depth": null, "price": 700, "unit": "/M", "note": "", "warn": false}, {"cat_page": "010", "cat": "波浪管", "code": "L724A1", "name": "波浪管 黑色（A型）", "w": 43.0, "h": 20.0, "depth": null, "price": 800, "unit": "/M", "note": "", "warn": false}, {"cat_page": "010", "cat": "波浪管", "code": "L724A2", "name": "波浪管 白色（A型）", "w": 43.0, "h": 20.0, "depth": null, "price": 900, "unit": "/M", "note": "", "warn": false}, {"cat_page": "010", "cat": "波浪管", "code": "L724B1", "name": "波浪管 黑色（B型）", "w": null, "h": null, "depth": null, "price": 850, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "010", "cat": "波浪管", "code": "L724B2", "name": "波浪管 白色（B型）", "w": null, "h": null, "depth": null, "price": 950, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "011", "cat": "大型鋁線槽", "code": "LX1015", "name": "大型鋁線槽（雙軌）", "w": 46.0, "h": 46.0, "depth": null, "price": 2500, "unit": "/M", "note": "", "warn": false}, {"cat_page": "011", "cat": "大型鋁線槽", "code": "LX1025", "name": "大型鋁線槽（雙軌）", "w": 46.0, "h": 46.0, "depth": null, "price": 2200, "unit": "/M", "note": "", "warn": false}, {"cat_page": "011", "cat": "大型鋁線槽", "code": "LX1016", "name": "大型鋁線槽（雙軌加高）", "w": 46.0, "h": 51.0, "depth": null, "price": 3000, "unit": "/M", "note": "", "warn": false}, {"cat_page": "011", "cat": "大型鋁線槽", "code": "CN4001", "name": "大型鋁線槽", "w": 20.0, "h": 30.0, "depth": null, "price": 1400, "unit": "/M", "note": "", "warn": false}, {"cat_page": "011", "cat": "大型鋁線槽", "code": "CN632A", "name": "大型鋁線槽", "w": 20.0, "h": 30.0, "depth": null, "price": 1600, "unit": "/M", "note": "", "warn": false}, {"cat_page": "011", "cat": "大型鋁線槽", "code": "CN635A", "name": "大型鋁線槽", "w": null, "h": null, "depth": null, "price": 1800, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "011", "cat": "大型鋁線槽", "code": "CN635", "name": "大型鋁線槽", "w": null, "h": null, "depth": null, "price": 1600, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "012", "cat": "LED燈槽", "code": "L6527X", "name": "LED大型燈槽（白/黑）", "w": 66.0, "h": 35.0, "depth": null, "price": 2000, "unit": "/M", "note": "附端蓋 $150/個", "warn": false}, {"cat_page": "012", "cat": "LED燈槽", "code": "XL01X", "name": "LED大型燈槽", "w": 65.0, "h": 79.0, "depth": null, "price": 5000, "unit": "/M", "note": "多種深度可選（51/79/99mm）", "warn": false}, {"cat_page": "012", "cat": "LED燈槽", "code": "LTJD001", "name": "感應式LED線槽控制器（標準）", "w": null, "h": null, "depth": null, "price": 900, "unit": "/台", "note": "", "warn": false}, {"cat_page": "012", "cat": "LED燈槽", "code": "LTJD888", "name": "感應式LED線槽控制器（高階）", "w": null, "h": null, "depth": null, "price": 9000, "unit": "/台", "note": "智慧感應款", "warn": false}, {"cat_page": "013", "cat": "LED線槽", "code": "LT00X", "name": "LED線槽", "w": 91.0, "h": 26.0, "depth": 9.0, "price": 1000, "unit": "/M", "note": "", "warn": false}, {"cat_page": "013", "cat": "LED線槽", "code": "LT30", "name": "LED線槽（寬型）", "w": null, "h": null, "depth": null, "price": 1200, "unit": "/M", "note": "⚠ 待確認尺寸", "warn": true}, {"cat_page": "013", "cat": "LED線槽", "code": "LT01X", "name": "端蓋", "w": null, "h": null, "depth": null, "price": 200, "unit": "/個", "note": "LT系列用", "warn": false}, {"cat_page": "013", "cat": "LED線槽", "code": "LT02X", "name": "端蓋（左）", "w": null, "h": null, "depth": null, "price": 200, "unit": "/個", "note": "", "warn": false}, {"cat_page": "013", "cat": "LED線槽", "code": "LT03X", "name": "端蓋（右）", "w": null, "h": null, "depth": null, "price": 200, "unit": "/個", "note": "", "warn": false}, {"cat_page": "013", "cat": "LED線槽", "code": "LT90X", "name": "轉角配件", "w": null, "h": null, "depth": null, "price": 250, "unit": "/個", "note": "", "warn": false}, {"cat_page": "013", "cat": "LED線槽", "code": "LT91X", "name": "轉角配件", "w": null, "h": null, "depth": null, "price": 250, "unit": "/個", "note": "", "warn": false}, {"cat_page": "013", "cat": "LED線槽", "code": "YQ013", "name": "LED線槽", "w": 82.0, "h": 25.0, "depth": null, "price": 1000, "unit": "/M", "note": "另款 57×24mm", "warn": false}, {"cat_page": "014", "cat": "彎型鋁線槽", "code": "HWA5324", "name": "彎型鋁線槽（向右彎）", "w": 59.0, "h": 38.0, "depth": null, "price": 800, "unit": "/M", "note": "", "warn": false}, {"cat_page": "014", "cat": "彎型鋁線槽", "code": "HWB4827", "name": "彎型鋁線槽（向左彎）", "w": 64.0, "h": 35.0, "depth": null, "price": 800, "unit": "/M", "note": "", "warn": false}, {"cat_page": "014", "cat": "彎型鋁線槽", "code": "639B", "name": "扁型鋁線槽", "w": 66.0, "h": 25.6, "depth": null, "price": 700, "unit": "/M", "note": "", "warn": false}, {"cat_page": "014", "cat": "彎型鋁線槽", "code": "HB639", "name": "扁型鋁線槽", "w": 66.0, "h": 25.6, "depth": null, "price": 700, "unit": "/M", "note": "", "warn": false}, {"cat_page": "014", "cat": "彎型鋁線槽", "code": "2006D", "name": "特殊造型鋁線槽 D款", "w": 71.3, "h": 24.0, "depth": null, "price": 800, "unit": "/M", "note": "", "warn": false}, {"cat_page": "014", "cat": "彎型鋁線槽", "code": "2006E", "name": "特殊造型鋁線槽 E款", "w": 71.3, "h": 24.0, "depth": null, "price": 800, "unit": "/M", "note": "", "warn": false}, {"cat_page": "014", "cat": "彎型鋁線槽", "code": "YQ0161", "name": "方型鋁線槽（銀色）", "w": 71.3, "h": 24.0, "depth": null, "price": 1600, "unit": "/M", "note": "", "warn": false}, {"cat_page": "014", "cat": "彎型鋁線槽", "code": "YQ0163", "name": "方型鋁線槽（金色）", "w": 71.3, "h": 24.0, "depth": null, "price": 1700, "unit": "/M", "note": "", "warn": false}, {"cat_page": "015", "cat": "LED燈條線槽", "code": "LS1513UD", "name": "LED燈條線槽（深型）", "w": 26.0, "h": 24.0, "depth": 10.0, "price": 700, "unit": "/M", "note": "", "warn": false}, {"cat_page": "015", "cat": "LED燈條線槽", "code": "LS2012MD", "name": "LED燈條線槽（寬型）", "w": 31.0, "h": 23.0, "depth": 17.0, "price": 900, "unit": "/M", "note": "", "warn": false}, {"cat_page": "015", "cat": "LED燈條線槽", "code": "LT241201X", "name": "LED燈條線槽", "w": null, "h": null, "depth": null, "price": 300, "unit": "/M", "note": "2835-24V-120 燈條用", "warn": false}];
+
+let state = { q: "", cat: "", sortCol: null, sortDir: 1 };
+
+const tbody    = document.getElementById("tableBody");
+const countEl  = document.getElementById("countShown");
+const emptyEl  = document.getElementById("emptyState");
+const toast    = document.getElementById("copyToast");
+let toastTimer = null;
+
+function dim(val) {
+  return val != null ? val : null;
+}
+
+function fmtDim(p) {
+  const w = dim(p.w), h = dim(p.h);
+  if (w != null && h != null) {
+    return `<span class="cell-dim">${w} × ${h}</span>`;
+  }
+  return `<span class="cell-dim-dash">—</span>`;
+}
+
+function fmtDepth(p) {
+  return p.depth != null
+    ? `<span class="cell-dim">${p.depth}</span>`
+    : `<span class="cell-dim-dash">—</span>`;
+}
+
+function highlight(text, q) {
+  if (!q) return text;
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, "gi");
+  return text.replace(re, '<mark style="background:#bb8009;color:#fff;border-radius:2px;padding:0 2px">$1</mark>');
+}
+
+function render() {
+  const { q, cat, sortCol, sortDir } = state;
+  const ql = q.toLowerCase();
+
+  let data = PRODUCTS.filter(p => {
+    const matchCat = !cat || p.cat === cat;
+    if (!ql) return matchCat;
+    const matchQ =
+      p.code.toLowerCase().includes(ql) ||
+      p.name.toLowerCase().includes(ql) ||
+      p.note.toLowerCase().includes(ql) ||
+      p.cat.toLowerCase().includes(ql);
+    return matchCat && matchQ;
+  });
+
+  if (sortCol) {
+    data = [...data].sort((a, b) => {
+      let av = a[sortCol] ?? (sortDir > 0 ? Infinity : -Infinity);
+      let bv = b[sortCol] ?? (sortDir > 0 ? Infinity : -Infinity);
+      if (typeof av === "number" && typeof bv === "number") return (av - bv) * sortDir;
+      return String(av).localeCompare(String(bv), "zh-TW") * sortDir;
+    });
+  }
+
+  countEl.textContent = data.length;
+  emptyEl.style.display = data.length ? "none" : "block";
+  document.getElementById("productTable").style.display = data.length ? "" : "none";
+
+  const rows = data.map((p, i) => {
+    const rowClass = p.warn ? "row-warn" : (i % 2 === 0 ? "row-even" : "row-odd");
+    const noteHtml = p.note
+      ? `<span class="${p.warn ? "note-warn" : "note-ok"}">${highlight(p.note, ql)}</span>`
+      : "";
+    return `<tr class="${rowClass}">
+      <td class="cell-code" onclick="copyCode('${p.code}')" title="點擊複製料號">${highlight(p.code, ql)}</td>
+      <td>${highlight(p.name, ql)}</td>
+      <td><span class="cat-pill">${p.cat}</span></td>
+      <td>${fmtDim(p)}</td>
+      <td>${fmtDepth(p)}</td>
+      <td class="cell-price">${p.price.toLocaleString("zh-TW")}</td>
+      <td class="cell-unit">${p.unit}</td>
+      <td class="cell-unit">P${p.cat_page}</td>
+      <td>${noteHtml}</td>
+    </tr>`;
+  }).join("");
+
+  tbody.innerHTML = rows;
+}
+
+function showToast(code) {
+  toast.textContent = `已複製  ${code}  ✓`;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
+}
+
+function fallbackCopy(code) {
+  const ta = document.createElement("textarea");
+  ta.value = code;
+  ta.style.cssText = "position:fixed;opacity:0;top:0;left:0";
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try { document.execCommand("copy"); } catch(e) {}
+  document.body.removeChild(ta);
+  showToast(code);
+}
+
+function copyCode(code) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(code).then(() => showToast(code)).catch(() => fallbackCopy(code));
+  } else {
+    fallbackCopy(code);
+  }
+}
+
+// ─── Search ───────────────────────────────────────────────────────────────
+let searchTimer = null;
+document.getElementById("searchInput").addEventListener("input", e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    state.q = e.target.value.trim();
+    render();
+  }, 120);
+});
+document.getElementById("searchInput").addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    e.target.value = "";
+    state.q = "";
+    render();
+  }
+});
+
+// ─── Category filter ──────────────────────────────────────────────────────
+document.querySelectorAll(".cat-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    state.cat = btn.dataset.cat;
+    render();
+  });
+});
+
+// ─── Sort ─────────────────────────────────────────────────────────────────
+document.querySelectorAll("th.sortable").forEach(th => {
+  th.addEventListener("click", () => {
+    const col = th.dataset.col;
+    if (state.sortCol === col) {
+      state.sortDir *= -1;
+    } else {
+      state.sortCol = col;
+      state.sortDir = 1;
+    }
+    document.querySelectorAll("th").forEach(t => t.classList.remove("sorted-asc", "sorted-desc"));
+    th.classList.add(state.sortDir === 1 ? "sorted-asc" : "sorted-desc");
+    render();
+  });
+});
+
+// ─── Init ─────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>

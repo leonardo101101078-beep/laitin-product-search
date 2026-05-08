@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>萊廷照明 — 業務查詢系統</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      --font-base: 17px;
+      --font-sm: 14px;
+      --font-lg: 20px;
+      --font-xl: 22px;
+      --touch: 48px;
+      --bg: #f5f7fa;
+      --surface: #ffffff;
+      --border: #d8dee7;
+      --text: #1a1a1a;
+      --text-muted: #555;
+      --primary: #1a5fa8;
+      --primary-dark: #134b88;
+      --price: #0a7c30;
+      --tag-bg: #e8f0fb;
+      --tag-text: #1a5fa8;
+      --radius: 8px;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+      --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
+      --header-h: 56px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-padding-top: var(--header-h); }
+
+    body {
+      font-family: "微軟正黑體", "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
+      font-size: var(--font-base);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-top: var(--header-h);
+    }
+
+    button, input, select { font: inherit; }
+
+    #site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header-h);
+      background: var(--primary);
+      color: #fff;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    #site-header h1 { font-size: 20px; font-weight: 700; letter-spacing: 0; }
+    .header-sub { font-size: 13px; opacity: 0.85; }
+
+    .controls-bar {
+      position: sticky;
+      top: var(--header-h);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      z-index: 90;
+      padding: 12px 16px 8px;
+    }
+
+    .controls-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .search-row { margin-bottom: 8px; }
+
+    .search-wrap {
+      position: relative;
+      max-width: 520px;
+    }
+
+    #search-input {
+      width: 100%;
+      height: var(--touch);
+      padding: 0 44px 0 16px;
+      font-size: var(--font-base);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    #search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(26, 95, 168, 0.12);
+    }
+
+    #clear-search {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    #clear-search:hover { background: var(--bg); }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .filter-select {
+      height: var(--touch);
+      padding: 0 12px;
+      font-size: var(--font-sm);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      min-width: 130px;
+      max-width: 100%;
+    }
+
+    .filter-select:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(26, 95, 168, 0.12);
+    }
+
+    #clear-filters {
+      height: var(--touch);
+      padding: 0 16px;
+      font-size: var(--font-sm);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    #clear-filters:hover { background: var(--bg); color: var(--text); }
+
+    .result-count {
+      font-size: var(--font-sm);
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    main { padding: 16px; }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 600px) {
+      .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 900px) {
+      .product-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      main { padding: 24px; }
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+      border: 1.5px solid transparent;
+      min-width: 0;
+    }
+
+    .card:hover,
+    .card:focus {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    .card:active { transform: translateY(0); }
+
+    .card-img {
+      width: 100%;
+      height: 180px;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .img-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .placeholder-sku {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .placeholder-cat {
+      font-size: 12px;
+      opacity: 0.75;
+      overflow-wrap: anywhere;
+    }
+
+    .card-body {
+      padding: 14px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .card-sku {
+      font-size: var(--font-sm);
+      color: var(--text-muted);
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+
+    .card-name {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text);
+      overflow-wrap: anywhere;
+    }
+
+    .card-size,
+    .card-meta {
+      font-size: var(--font-sm);
+      color: var(--text-muted);
+      overflow-wrap: anywhere;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin: 2px 0;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    .card-price {
+      font-size: var(--font-lg);
+      font-weight: 700;
+      color: var(--price);
+      margin-top: 4px;
+      overflow-wrap: anywhere;
+    }
+
+    .no-result {
+      text-align: center;
+      padding: 60px 16px;
+      color: var(--text-muted);
+    }
+
+    .no-result p {
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+
+    .no-result button {
+      min-height: var(--touch);
+      padding: 12px 24px;
+      font-size: var(--font-base);
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .no-result button:hover { background: var(--primary-dark); }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .modal-overlay[hidden] { display: none; }
+
+    @media (min-width: 600px) {
+      .modal-overlay {
+        align-items: center;
+        padding: 24px;
+      }
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius) var(--radius) 0 0;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      padding: 0;
+    }
+
+    @media (min-width: 600px) {
+      .modal {
+        border-radius: var(--radius);
+        max-width: 640px;
+        max-height: 85vh;
+      }
+    }
+
+    .modal-close {
+      position: sticky;
+      top: 0;
+      float: right;
+      margin: 12px 12px 0 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: var(--bg);
+      font-size: 18px;
+      cursor: pointer;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .modal-close:hover { background: var(--border); }
+
+    .modal-header {
+      padding: 16px 60px 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-sku {
+      font-size: var(--font-sm);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .modal-name {
+      font-size: 20px;
+      font-weight: 700;
+      margin-top: 2px;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .modal-gallery { background: #000; }
+
+    .modal-main-img {
+      width: 100%;
+      height: 240px;
+      object-fit: contain;
+      display: block;
+    }
+
+    @media (min-width: 600px) {
+      .modal-main-img { height: 320px; }
+    }
+
+    .modal-thumbs {
+      display: flex;
+      gap: 4px;
+      padding: 8px;
+      overflow-x: auto;
+      background: #111;
+    }
+
+    .modal-thumb {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+      cursor: pointer;
+      opacity: 0.65;
+      border: 2px solid transparent;
+      flex-shrink: 0;
+    }
+
+    .modal-thumb.active,
+    .modal-thumb:hover {
+      opacity: 1;
+      border-color: #fff;
+    }
+
+    .modal-specs { padding: 16px 20px; }
+
+    .specs-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--font-base);
+    }
+
+    .specs-table th {
+      text-align: left;
+      padding: 8px 12px 8px 0;
+      color: var(--text-muted);
+      font-weight: 500;
+      white-space: nowrap;
+      vertical-align: top;
+      width: 100px;
+    }
+
+    .specs-table td {
+      padding: 8px 0;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      overflow-wrap: anywhere;
+    }
+
+    .modal-price {
+      padding: 16px 20px;
+      border-top: 2px solid var(--border);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--price);
+      overflow-wrap: anywhere;
+    }
+
+    .modal-notes {
+      padding: 8px 20px 20px;
+      font-size: var(--font-sm);
+      color: var(--text-muted);
+      overflow-wrap: anywhere;
+    }
+  </style>
+</head>
+<body>
+  <header id="site-header">
+    <div class="header-inner">
+      <h1>萊廷照明</h1>
+      <span class="header-sub">業務查詢系統</span>
+    </div>
+  </header>
+
+  <div id="controls" class="controls-bar">
+    <div class="controls-inner">
+      <div class="search-row">
+        <div class="search-wrap">
+          <input type="search" id="search-input" placeholder="輸入料號、品名、場景…" autocomplete="off">
+          <button id="clear-search" type="button" aria-label="清除">✕</button>
+        </div>
+      </div>
+      <div class="filter-row">
+        <select id="filter-mount-method" class="filter-select" data-filter="mountMethod">
+          <option value="">安裝方式（全部）</option>
+        </select>
+        <select id="filter-mount-location" class="filter-select" data-filter="mountLocation">
+          <option value="">安裝位置（全部）</option>
+        </select>
+        <select id="filter-scene" class="filter-select" data-filter="scene">
+          <option value="">適用場景（全部）</option>
+        </select>
+        <button id="clear-filters" type="button">清除篩選</button>
+      </div>
+      <div id="result-count" class="result-count"></div>
+    </div>
+  </div>
+
+  <main>
+    <div id="product-grid" class="product-grid"></div>
+    <div id="no-result" class="no-result" hidden>
+      <p>找不到符合條件的產品</p>
+      <button type="button" onclick="clearAll()">清除所有篩選</button>
+    </div>
+  </main>
+
+  <div id="modal-overlay" class="modal-overlay" hidden>
+    <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button id="modal-close" class="modal-close" type="button" aria-label="關閉">✕</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script>
+    let allProducts = [];
+    let filtered = [];
+    let savedScrollY = 0;
+
+    const state = {
+      query: '',
+      mountMethod: '',
+      mountLocation: '',
+      scene: ''
+    };
+
+    const CAT_COLORS = {
+      '天花回光槽': { bg: '#dbeafe', text: '#1e3a5f' },
+      '超薄斜角懸浮鋁槽': { bg: '#ede9fe', text: '#3b1f7a' },
+      '嵌入斜照偏光': { bg: '#fce7f3', text: '#6b1342' },
+      '斜照懸浮吊頂型材': { bg: '#d1fae5', text: '#064e3b' },
+      '嵌入式無邊框偏光洗牆': { bg: '#fef9c3', text: '#713f12' },
+      '弧面雙向回光槽': { bg: '#ffedd5', text: '#7c2d12' },
+      '防眩弧面懸浮鋁槽': { bg: '#e0f2fe', text: '#0c4a6e' },
+      '極窄系列': { bg: '#f0fdf4', text: '#14532d' },
+      '單邊線型燈': { bg: '#fdf4ff', text: '#581c87' },
+      '明裝免吊頂頂角': { bg: '#fff7ed', text: '#7c2d12' },
+      '雙路發光牆沿線型燈': { bg: '#f8f8f8', text: '#111' },
+      '頂角線型燈': { bg: '#ecfdf5', text: '#064e3b' },
+      '頂角線條燈槽': { bg: '#fef3c7', text: '#78350f' },
+      '向上發光回光槽': { bg: '#e0f7fa', text: '#006064' },
+      '牆面腰際線型燈': { bg: '#fce4ec', text: '#880e4f' },
+      '常用型材': { bg: '#f5f5f5', text: '#333' },
+      '配件': { bg: '#fffde7', text: '#5d4037' }
+    };
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char]));
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value);
+    }
+
+    function splitParts(value, pattern) {
+      return String(value || '')
+        .split(pattern)
+        .map(s => s.trim())
+        .filter(Boolean);
+    }
+
+    async function init() {
+      try {
+        const res = await fetch('./products.json');
+        if (!res.ok) throw new Error('Failed to load products.json');
+        const data = await res.json();
+        allProducts = Array.isArray(data.products) ? data.products : [];
+        buildFilterOptions();
+        filter();
+      } catch (e) {
+        document.getElementById('product-grid').innerHTML =
+          '<p style="padding:32px;color:#c00">無法載入資料，請確認已執行 build_search.py 並透過本機伺服器開啟頁面。</p>';
+      }
+    }
+
+    function buildFilterOptions() {
+      const methods = [...new Set(
+        allProducts
+          .map(p => p.mountMethod)
+          .filter(v => v && v !== 'N/A')
+          .flatMap(v => splitParts(v, '/'))
+      )].sort();
+
+      const locations = [...new Set(
+        allProducts
+          .map(p => p.mountLocation)
+          .filter(v => v && v !== 'N/A')
+          .flatMap(v => splitParts(v, /[\/、]/))
+      )].sort();
+
+      const scenes = [...new Set(
+        allProducts.flatMap(p => p.sceneList || [])
+      )].filter(Boolean).sort();
+
+      populateSelect('filter-mount-method', methods, '安裝方式（全部）');
+      populateSelect('filter-mount-location', locations, '安裝位置（全部）');
+      populateSelect('filter-scene', scenes, '適用場景（全部）');
+    }
+
+    function populateSelect(id, values, placeholder) {
+      const sel = document.getElementById(id);
+      sel.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>` +
+        values.map(v => `<option value="${escapeAttr(v)}">${escapeHtml(v)}</option>`).join('');
+    }
+
+    function matchSearch(p, q) {
+      const query = q.toLowerCase().trim();
+      if (!query) return true;
+      const haystack = [
+        p.sku, p.name, p.scenes, p.category,
+        p.features, p.mountLocation, p.notes
+      ].filter(Boolean).join(' ').toLowerCase();
+      return haystack.includes(query);
+    }
+
+    function matchFilters(p) {
+      if (state.mountMethod) {
+        const parts = splitParts(p.mountMethod, '/');
+        if (!parts.includes(state.mountMethod)) return false;
+      }
+      if (state.mountLocation) {
+        const parts = splitParts(p.mountLocation, /[\/、]/);
+        if (!parts.includes(state.mountLocation)) return false;
+      }
+      if (state.scene) {
+        if (!(p.sceneList || []).includes(state.scene)) return false;
+      }
+      return true;
+    }
+
+    function filter() {
+      filtered = allProducts.filter(p => matchSearch(p, state.query) && matchFilters(p));
+      document.getElementById('result-count').textContent = `共 ${filtered.length} 項產品`;
+      renderGrid();
+    }
+
+    function getPlaceholder(p) {
+      const c = CAT_COLORS[p.category] || { bg: '#f1f5f9', text: '#374151' };
+      return `<div class="img-placeholder" style="background:${c.bg};color:${c.text}">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <rect x="4" y="15" width="32" height="8" rx="4" fill="currentColor" opacity="0.35"></rect>
+          <rect x="8" y="9" width="24" height="4" rx="2" fill="currentColor" opacity="0.55"></rect>
+          <circle cx="20" cy="30" r="3" fill="currentColor" opacity="0.25"></circle>
+        </svg>
+        <span class="placeholder-sku">${escapeHtml(String(p.sku || '').slice(0, 8))}</span>
+        <span class="placeholder-cat">${escapeHtml(p.category || '')}</span>
+      </div>`;
+    }
+
+    function renderImg(p) {
+      if (!p.hasImage || !p.images || !p.images.main) return getPlaceholder(p);
+      return `<img src="${escapeAttr(p.images.main)}" alt="${escapeAttr(p.name || p.sku)}" loading="lazy"
+        onerror="this.parentElement.innerHTML=window.getPlaceholderById('${escapeAttr(p.sku)}')">`;
+    }
+
+    window.getPlaceholderById = function(sku) {
+      const p = allProducts.find(x => x.sku === sku);
+      return p ? getPlaceholder(p) : '';
+    };
+
+    function formatSize(p) {
+      const parts = [];
+      if (p.widthMm) parts.push(`${p.widthMm}`);
+      if (p.heightMm) parts.push(`${p.heightMm}`);
+      if (parts.length === 0) return '';
+      return `${parts.join(' × ')} mm`;
+    }
+
+    function formatPrice(p) {
+      if (!p.price) return '';
+      const amount = typeof p.price === 'number'
+        ? `NT$${p.price.toLocaleString()}`
+        : `NT$${p.price}`;
+      const unit = p.priceUnit || '';
+      return `${amount} ${unit}`.trim();
+    }
+
+    function renderCard(p) {
+      const size = formatSize(p);
+      const price = formatPrice(p);
+      const tags = (p.sceneList || []).slice(0, 3)
+        .map(s => `<span class="tag">${escapeHtml(s)}</span>`).join('');
+      const meta = [p.mountMethod, p.mountLocation]
+        .filter(v => v && v !== 'N/A').join(' · ');
+
+      return `<article class="card" tabindex="0" data-sku="${escapeAttr(p.sku)}" role="button" aria-label="${escapeAttr(`${p.sku} ${p.name || ''}`)}">
+        <div class="card-img">${renderImg(p)}</div>
+        <div class="card-body">
+          <div class="card-sku">${escapeHtml(p.sku)}</div>
+          <div class="card-name">${escapeHtml(p.name || '')}</div>
+          ${size ? `<div class="card-size">${escapeHtml(size)}</div>` : ''}
+          ${tags ? `<div class="card-tags">${tags}</div>` : ''}
+          ${meta ? `<div class="card-meta">${escapeHtml(meta)}</div>` : ''}
+          ${price ? `<div class="card-price">${escapeHtml(price)}</div>` : ''}
+        </div>
+      </article>`;
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('product-grid');
+      const noResult = document.getElementById('no-result');
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        noResult.hidden = false;
+        return;
+      }
+      noResult.hidden = true;
+      grid.innerHTML = filtered.map(renderCard).join('');
+    }
+
+    function openModal(sku) {
+      const p = allProducts.find(x => x.sku === sku);
+      if (!p) return;
+
+      savedScrollY = window.scrollY;
+      const overlay = document.getElementById('modal-overlay');
+      const content = document.getElementById('modal-content');
+
+      let galleryHTML = '';
+      const gallery = p.hasImage && p.images ? (p.images.gallery || []) : [];
+      if (gallery.length > 0) {
+        const thumbs = gallery
+          .map((src, i) => `<img src="${escapeAttr(src)}" class="modal-thumb${i === 0 ? ' active' : ''}" data-src="${escapeAttr(src)}" loading="lazy" alt="">`)
+          .join('');
+        galleryHTML = `
+          <div class="modal-gallery">
+            <img id="modal-main-img" class="modal-main-img" src="${escapeAttr(gallery[0])}" alt="${escapeAttr(p.name || p.sku)}">
+            ${gallery.length > 1 ? `<div class="modal-thumbs">${thumbs}</div>` : ''}
+          </div>`;
+      }
+
+      function row(label, value) {
+        if (!value || value === 'N/A') return '';
+        return `<tr><th>${escapeHtml(label)}</th><td>${escapeHtml(value)}</td></tr>`;
+      }
+
+      function sizeStr() {
+        const parts = [];
+        if (p.widthMm) parts.push(`外寬 ${p.widthMm} mm`);
+        if (p.heightMm) parts.push(`外高 ${p.heightMm} mm`);
+        if (p.channelWidthMm) parts.push(`槽寬 ${p.channelWidthMm} mm`);
+        if (p.thicknessMm) parts.push(`板厚 ${p.thicknessMm} mm`);
+        return parts.join('　');
+      }
+
+      const specsHTML = `
+        <div class="modal-specs">
+          <table class="specs-table">
+            ${row('型錄頁', p.catalogPage)}
+            ${row('大類', p.category)}
+            ${sizeStr() ? `<tr><th>尺寸</th><td>${escapeHtml(sizeStr())}</td></tr>` : ''}
+            ${row('安裝方式', p.mountMethod)}
+            ${row('安裝位置', p.mountLocation)}
+            ${row('出光方向', p.lightDirection)}
+            ${row('電壓', p.voltage)}
+            ${row('色溫', p.colorTemp)}
+            ${row('IP防護', p.ipRating)}
+            ${row('適用場景', p.scenes)}
+            ${row('特殊功能', p.features)}
+            ${row('可選顏色', p.colors)}
+            ${row('對應配件', p.relatedParts)}
+          </table>
+        </div>`;
+
+      const priceStr = formatPrice(p);
+      const priceHTML = priceStr ? `<div class="modal-price">${escapeHtml(priceStr)}</div>` : '';
+      const notesHTML = p.notes ? `<div class="modal-notes">備註：${escapeHtml(p.notes)}</div>` : '';
+
+      content.innerHTML = `
+        <div class="modal-header">
+          <div class="modal-sku">${escapeHtml(p.sku)}</div>
+          <div id="modal-title" class="modal-name">${escapeHtml(p.name || '')}</div>
+        </div>
+        ${galleryHTML}
+        ${specsHTML}
+        ${priceHTML}
+        ${notesHTML}`;
+
+      content.querySelectorAll('.modal-thumb').forEach(thumb => {
+        thumb.addEventListener('click', () => {
+          document.getElementById('modal-main-img').src = thumb.dataset.src;
+          content.querySelectorAll('.modal-thumb').forEach(t => t.classList.remove('active'));
+          thumb.classList.add('active');
+        });
+      });
+
+      overlay.hidden = false;
+      document.body.style.overflow = 'hidden';
+      document.getElementById('modal-close').focus();
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').hidden = true;
+      document.body.style.overflow = '';
+      window.scrollTo(0, savedScrollY);
+    }
+
+    function bindEvents() {
+      document.getElementById('search-input').addEventListener('input', e => {
+        state.query = e.target.value;
+        filter();
+      });
+
+      document.getElementById('clear-search').addEventListener('click', () => {
+        document.getElementById('search-input').value = '';
+        state.query = '';
+        filter();
+        document.getElementById('search-input').focus();
+      });
+
+      document.querySelectorAll('.filter-select').forEach(sel => {
+        sel.addEventListener('change', e => {
+          state[e.target.dataset.filter] = e.target.value;
+          filter();
+        });
+      });
+
+      document.getElementById('clear-filters').addEventListener('click', clearAll);
+
+      document.getElementById('product-grid').addEventListener('click', e => {
+        const card = e.target.closest('.card');
+        if (card) openModal(card.dataset.sku);
+      });
+
+      document.getElementById('product-grid').addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          const card = e.target.closest('.card');
+          if (card) {
+            e.preventDefault();
+            openModal(card.dataset.sku);
+          }
+        }
+      });
+
+      document.getElementById('modal-close').addEventListener('click', closeModal);
+
+      document.getElementById('modal-overlay').addEventListener('click', e => {
+        if (e.target === e.currentTarget) closeModal();
+      });
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && !document.getElementById('modal-overlay').hidden) {
+          closeModal();
+        }
+      });
+    }
+
+    function clearAll() {
+      document.getElementById('search-input').value = '';
+      document.querySelectorAll('.filter-select').forEach(s => { s.value = ''; });
+      state.query = '';
+      state.mountMethod = '';
+      state.mountLocation = '';
+      state.scene = '';
+      filter();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      bindEvents();
+      init();
+    });
+  </script>
+</body>
+</html>
