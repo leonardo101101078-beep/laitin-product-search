@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>萊廷照明 — 業務查詢系統</title>
-  <link rel="icon" href="data:,">
+  <link rel="icon" type="image/png" href="assets/logo.png">
   <style>
     :root {
       --font-base: 17px;
@@ -60,15 +60,32 @@
 
     .header-inner {
       display: flex;
-      align-items: baseline;
-      gap: 10px;
+      align-items: center;
+      gap: 12px;
       width: 100%;
       max-width: 1200px;
       margin: 0 auto;
+      min-width: 0;
+    }
+
+    .header-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 6px;
+      background: #fff;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      min-width: 0;
     }
 
     #site-header h1 { font-size: 20px; font-weight: 700; letter-spacing: 0; }
-    .header-sub { font-size: 13px; opacity: 0.85; }
+    .header-sub { font-size: 13px; opacity: 0.85; white-space: nowrap; }
 
     .controls-bar {
       position: sticky;
@@ -84,7 +101,7 @@
       margin: 0 auto;
     }
 
-    .search-row { margin-bottom: 8px; }
+    .search-row { margin-bottom: 10px; }
 
     .search-wrap {
       position: relative;
@@ -129,11 +146,79 @@
 
     #clear-search:hover { background: var(--bg); }
 
-    .filter-row {
+    .advanced-toggle {
+      width: 100%;
+      min-height: var(--touch);
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
       align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      cursor: pointer;
+      max-width: 520px;
+    }
+
+    .advanced-toggle:hover { background: var(--bg); }
+
+    .advanced-toggle:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(26, 95, 168, 0.12);
+    }
+
+    .toggle-title {
+      font-weight: 700;
+      font-size: var(--font-sm);
+    }
+
+    .toggle-icon {
+      font-size: 18px;
+      line-height: 1;
+      transition: transform 0.2s;
+    }
+
+    .advanced-toggle[aria-expanded="true"] .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .advanced-panel {
+      margin-top: 10px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fbfcfe;
+    }
+
+    .advanced-panel[hidden] { display: none; }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    @media (min-width: 700px) {
+      .filter-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .filter-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .filter-field label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
     }
 
     .filter-select {
@@ -145,14 +230,44 @@
       background: var(--surface);
       color: var(--text);
       cursor: pointer;
-      min-width: 130px;
+      width: 100%;
       max-width: 100%;
     }
 
-    .filter-select:focus {
+    .filter-input {
+      width: 100%;
+      height: var(--touch);
+      padding: 0 12px;
+      font-size: var(--font-sm);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .filter-select:focus,
+    .filter-input:focus {
       border-color: var(--primary);
       outline: none;
       box-shadow: 0 0 0 3px rgba(26, 95, 168, 0.12);
+    }
+
+    .range-pair {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 6px;
+      align-items: center;
+    }
+
+    .range-separator {
+      font-size: var(--font-sm);
+      color: var(--text-muted);
+    }
+
+    .filter-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
     }
 
     #clear-filters {
@@ -292,6 +407,33 @@
       gap: 4px;
       margin: 2px 0;
     }
+
+    .demo-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 2px;
+    }
+
+    .demo-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    .badge-stock { background: #dcfce7; color: #166534; }
+    .badge-stock-low { background: #fef3c7; color: #92400e; }
+    .badge-preorder { background: #e0f2fe; color: #075985; }
+    .badge-promo { background: #fee2e2; color: #991b1b; }
+    .badge-hot { background: #ffedd5; color: #9a3412; }
+    .badge-new { background: #ede9fe; color: #5b21b6; }
+    .badge-sample { background: #f1f5f9; color: #334155; }
 
     .tag {
       display: inline-block;
@@ -497,8 +639,11 @@
 <body>
   <header id="site-header">
     <div class="header-inner">
-      <h1>萊廷照明</h1>
-      <span class="header-sub">業務查詢系統</span>
+      <img class="header-logo" src="assets/logo.png" alt="萊廷照明">
+      <div class="header-title">
+        <h1>萊廷照明</h1>
+        <span class="header-sub">業務查詢系統</span>
+      </div>
     </div>
   </header>
 
@@ -510,17 +655,82 @@
           <button id="clear-search" type="button" aria-label="清除">✕</button>
         </div>
       </div>
-      <div class="filter-row">
-        <select id="filter-mount-method" class="filter-select" data-filter="mountMethod">
-          <option value="">安裝方式（全部）</option>
-        </select>
-        <select id="filter-mount-location" class="filter-select" data-filter="mountLocation">
-          <option value="">安裝位置（全部）</option>
-        </select>
-        <select id="filter-scene" class="filter-select" data-filter="scene">
-          <option value="">適用場景（全部）</option>
-        </select>
-        <button id="clear-filters" type="button">清除篩選</button>
+      <button id="advanced-toggle" class="advanced-toggle" type="button" aria-expanded="false" aria-controls="advanced-panel">
+        <span class="toggle-title">進階搜索</span>
+        <span class="toggle-icon" aria-hidden="true">⌄</span>
+      </button>
+      <div id="advanced-panel" class="advanced-panel" hidden>
+        <div class="filter-row">
+          <div class="filter-field">
+            <label for="filter-category">產品類別</label>
+            <select id="filter-category" class="filter-select" data-filter="category">
+              <option value="">全部類別</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label for="filter-scene">適用場景</label>
+            <select id="filter-scene" class="filter-select" data-filter="scene">
+              <option value="">全部場景</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label for="filter-mount-method">安裝方式</label>
+            <select id="filter-mount-method" class="filter-select" data-filter="mountMethod">
+              <option value="">全部方式</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label for="filter-mount-location">安裝位置</label>
+            <select id="filter-mount-location" class="filter-select" data-filter="mountLocation">
+              <option value="">全部位置</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label for="filter-light-direction">出光方向</label>
+            <select id="filter-light-direction" class="filter-select" data-filter="lightDirection">
+              <option value="">全部方向</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label for="filter-color-temp">色溫</label>
+            <select id="filter-color-temp" class="filter-select" data-filter="colorTemp">
+              <option value="">全部色溫</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label for="filter-ip-rating">IP 防護</label>
+            <select id="filter-ip-rating" class="filter-select" data-filter="ipRating">
+              <option value="">全部 IP</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label>外寬 mm</label>
+            <div class="range-pair">
+              <input id="filter-width-min" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最小" data-filter="widthMin">
+              <span class="range-separator">至</span>
+              <input id="filter-width-max" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最大" data-filter="widthMax">
+            </div>
+          </div>
+          <div class="filter-field">
+            <label>外高 mm</label>
+            <div class="range-pair">
+              <input id="filter-height-min" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最小" data-filter="heightMin">
+              <span class="range-separator">至</span>
+              <input id="filter-height-max" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最大" data-filter="heightMax">
+            </div>
+          </div>
+          <div class="filter-field">
+            <label>槽寬 mm</label>
+            <div class="range-pair">
+              <input id="filter-channel-min" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最小" data-filter="channelMin">
+              <span class="range-separator">至</span>
+              <input id="filter-channel-max" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最大" data-filter="channelMax">
+            </div>
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button id="clear-filters" type="button">清除篩選</button>
+        </div>
       </div>
       <div id="result-count" class="result-count"></div>
     </div>
@@ -548,10 +758,29 @@
 
     const state = {
       query: '',
+      category: '',
       mountMethod: '',
       mountLocation: '',
-      scene: ''
+      scene: '',
+      lightDirection: '',
+      colorTemp: '',
+      ipRating: '',
+      widthMin: '',
+      widthMax: '',
+      heightMin: '',
+      heightMax: '',
+      channelMin: '',
+      channelMax: ''
     };
+
+    const DEMO_IMAGE_OVERRIDES = [
+      ['參考圖片/ 1.png', '參考圖片/ 2.png'],
+      ['參考圖片/ 3.png', '參考圖片/ 4.png'],
+      ['參考圖片/ 5.png', '參考圖片/ 6.png'],
+      ['參考圖片/ 7.png', '參考圖片/ 8.png'],
+      ['參考圖片/ 9.png', '參考圖片/ 10.png'],
+      ['參考圖片/ 11.png', '參考圖片/ 12.png']
+    ];
 
     const CAT_COLORS = {
       '天花回光槽': { bg: '#dbeafe', text: '#1e3a5f' },
@@ -594,6 +823,16 @@
         .filter(Boolean);
     }
 
+    function splitFilterParts(value) {
+      return splitParts(value, /[\/、,，＋+]/).filter(v => v !== 'N/A');
+    }
+
+    function toNumber(value) {
+      if (value === '' || value == null) return null;
+      const n = Number(value);
+      return Number.isFinite(n) ? n : null;
+    }
+
     async function init() {
       try {
         const res = await fetch('./products.json');
@@ -609,27 +848,53 @@
     }
 
     function buildFilterOptions() {
+      const categories = [...new Set(
+        allProducts
+          .map(p => p.category)
+          .filter(Boolean)
+      )].sort();
+
       const methods = [...new Set(
         allProducts
           .map(p => p.mountMethod)
           .filter(v => v && v !== 'N/A')
-          .flatMap(v => splitParts(v, '/'))
+          .flatMap(splitFilterParts)
       )].sort();
 
       const locations = [...new Set(
         allProducts
           .map(p => p.mountLocation)
           .filter(v => v && v !== 'N/A')
-          .flatMap(v => splitParts(v, /[\/、]/))
+          .flatMap(splitFilterParts)
       )].sort();
 
       const scenes = [...new Set(
         allProducts.flatMap(p => p.sceneList || [])
       )].filter(Boolean).sort();
 
-      populateSelect('filter-mount-method', methods, '安裝方式（全部）');
-      populateSelect('filter-mount-location', locations, '安裝位置（全部）');
-      populateSelect('filter-scene', scenes, '適用場景（全部）');
+      const lightDirections = [...new Set(
+        allProducts
+          .map(p => p.lightDirection)
+          .filter(v => v && v !== 'N/A')
+      )].sort();
+
+      const colorTemps = [...new Set(
+        allProducts.flatMap(p => p.colorTempList || [])
+      )].filter(Boolean).sort();
+
+      const ipRatings = [...new Set(
+        allProducts
+          .map(p => p.ipRating)
+          .filter(v => v && v !== 'N/A')
+      )].sort();
+
+      populateSelect('filter-category', categories, '全部類別');
+      populateSelect('filter-mount-method', methods, '全部方式');
+      populateSelect('filter-mount-location', locations, '全部位置');
+      populateSelect('filter-scene', scenes, '全部場景');
+      populateSelect('filter-light-direction', lightDirections, '全部方向');
+      populateSelect('filter-color-temp', colorTemps, '全部色溫');
+      populateSelect('filter-ip-rating', ipRatings, '全部 IP');
     }
 
     function populateSelect(id, values, placeholder) {
@@ -643,23 +908,41 @@
       if (!query) return true;
       const haystack = [
         p.sku, p.name, p.scenes, p.category,
-        p.features, p.mountLocation, p.notes
+        p.features, p.mountMethod, p.mountLocation, p.lightDirection, p.notes
       ].filter(Boolean).join(' ').toLowerCase();
       return haystack.includes(query);
     }
 
     function matchFilters(p) {
+      if (state.category && p.category !== state.category) return false;
       if (state.mountMethod) {
-        const parts = splitParts(p.mountMethod, '/');
+        const parts = splitFilterParts(p.mountMethod);
         if (!parts.includes(state.mountMethod)) return false;
       }
       if (state.mountLocation) {
-        const parts = splitParts(p.mountLocation, /[\/、]/);
+        const parts = splitFilterParts(p.mountLocation);
         if (!parts.includes(state.mountLocation)) return false;
       }
       if (state.scene) {
         if (!(p.sceneList || []).includes(state.scene)) return false;
       }
+      if (state.lightDirection && p.lightDirection !== state.lightDirection) return false;
+      if (state.colorTemp && !(p.colorTempList || []).includes(state.colorTemp)) return false;
+      if (state.ipRating && p.ipRating !== state.ipRating) return false;
+      if (!matchRange(p.widthMm, state.widthMin, state.widthMax)) return false;
+      if (!matchRange(p.heightMm, state.heightMin, state.heightMax)) return false;
+      if (!matchRange(p.channelWidthMm, state.channelMin, state.channelMax)) return false;
+      return true;
+    }
+
+    function matchRange(value, minValue, maxValue) {
+      const min = toNumber(minValue);
+      const max = toNumber(maxValue);
+      if (min === null && max === null) return true;
+      const n = toNumber(value);
+      if (n === null) return false;
+      if (min !== null && n < min) return false;
+      if (max !== null && n > max) return false;
       return true;
     }
 
@@ -667,6 +950,51 @@
       filtered = allProducts.filter(p => matchSearch(p, state.query) && matchFilters(p));
       document.getElementById('result-count').textContent = `共 ${filtered.length} 項產品`;
       renderGrid();
+    }
+
+    function getProductIndex(p) {
+      return allProducts.findIndex(x => x.sku === p.sku);
+    }
+
+    function getProductImages(p) {
+      const idx = getProductIndex(p);
+      const demoGallery = DEMO_IMAGE_OVERRIDES[idx];
+      if (demoGallery) {
+        return {
+          hasImage: true,
+          main: demoGallery[0],
+          gallery: demoGallery
+        };
+      }
+      if (!p.hasImage || !p.images || !p.images.main) {
+        return { hasImage: false, main: null, gallery: [] };
+      }
+      return {
+        hasImage: true,
+        main: p.images.main,
+        gallery: p.images.gallery || [p.images.main]
+      };
+    }
+
+    function getDemoBadges(p) {
+      const idx = Math.max(0, getProductIndex(p));
+      const stockCycle = [
+        { text: '現貨充足', className: 'badge-stock' },
+        { text: '少量庫存', className: 'badge-stock-low' },
+        { text: '可預訂', className: 'badge-preorder' }
+      ];
+      const badges = [stockCycle[idx % stockCycle.length]];
+      if (idx % 4 === 0) badges.push({ text: '優惠', className: 'badge-promo' });
+      if (idx % 5 === 1) badges.push({ text: '熱銷', className: 'badge-hot' });
+      if (idx % 7 === 2) badges.push({ text: '新品', className: 'badge-new' });
+      if (!p.hasImage || idx < DEMO_IMAGE_OVERRIDES.length) badges.push({ text: '展示品', className: 'badge-sample' });
+      return badges;
+    }
+
+    function renderDemoBadges(p) {
+      return getDemoBadges(p)
+        .map(b => `<span class="demo-badge ${escapeAttr(b.className)}">${escapeHtml(b.text)}</span>`)
+        .join('');
     }
 
     function getPlaceholder(p) {
@@ -683,8 +1011,9 @@
     }
 
     function renderImg(p) {
-      if (!p.hasImage || !p.images || !p.images.main) return getPlaceholder(p);
-      return `<img src="${escapeAttr(p.images.main)}" alt="${escapeAttr(p.name || p.sku)}" loading="lazy"
+      const images = getProductImages(p);
+      if (!images.hasImage || !images.main) return getPlaceholder(p);
+      return `<img src="${escapeAttr(images.main)}" alt="${escapeAttr(p.name || p.sku)}" loading="lazy"
         onerror="this.parentElement.innerHTML=window.getPlaceholderById('${escapeAttr(p.sku)}')">`;
     }
 
@@ -715,6 +1044,7 @@
       const price = formatPrice(p);
       const tags = (p.sceneList || []).slice(0, 3)
         .map(s => `<span class="tag">${escapeHtml(s)}</span>`).join('');
+      const demoBadges = renderDemoBadges(p);
       const meta = [p.mountMethod, p.mountLocation]
         .filter(v => v && v !== 'N/A').join(' · ');
 
@@ -724,6 +1054,7 @@
           <div class="card-sku">${escapeHtml(p.sku)}</div>
           <div class="card-name">${escapeHtml(p.name || '')}</div>
           ${size ? `<div class="card-size">${escapeHtml(size)}</div>` : ''}
+          ${demoBadges ? `<div class="demo-badges">${demoBadges}</div>` : ''}
           ${tags ? `<div class="card-tags">${tags}</div>` : ''}
           ${meta ? `<div class="card-meta">${escapeHtml(meta)}</div>` : ''}
           ${price ? `<div class="card-price">${escapeHtml(price)}</div>` : ''}
@@ -752,7 +1083,8 @@
       const content = document.getElementById('modal-content');
 
       let galleryHTML = '';
-      const gallery = p.hasImage && p.images ? (p.images.gallery || []) : [];
+      const productImages = getProductImages(p);
+      const gallery = productImages.hasImage ? productImages.gallery : [];
       if (gallery.length > 0) {
         const thumbs = gallery
           .map((src, i) => `<img src="${escapeAttr(src)}" class="modal-thumb${i === 0 ? ' active' : ''}" data-src="${escapeAttr(src)}" loading="lazy" alt="">`)
@@ -831,6 +1163,13 @@
     }
 
     function bindEvents() {
+      document.getElementById('advanced-toggle').addEventListener('click', e => {
+        const panel = document.getElementById('advanced-panel');
+        const expanded = e.currentTarget.getAttribute('aria-expanded') === 'true';
+        e.currentTarget.setAttribute('aria-expanded', String(!expanded));
+        panel.hidden = expanded;
+      });
+
       document.getElementById('search-input').addEventListener('input', e => {
         state.query = e.target.value;
         filter();
@@ -845,6 +1184,13 @@
 
       document.querySelectorAll('.filter-select').forEach(sel => {
         sel.addEventListener('change', e => {
+          state[e.target.dataset.filter] = e.target.value;
+          filter();
+        });
+      });
+
+      document.querySelectorAll('.filter-input').forEach(input => {
+        input.addEventListener('input', e => {
           state[e.target.dataset.filter] = e.target.value;
           filter();
         });
@@ -883,10 +1229,21 @@
     function clearAll() {
       document.getElementById('search-input').value = '';
       document.querySelectorAll('.filter-select').forEach(s => { s.value = ''; });
+      document.querySelectorAll('.filter-input').forEach(s => { s.value = ''; });
       state.query = '';
+      state.category = '';
       state.mountMethod = '';
       state.mountLocation = '';
       state.scene = '';
+      state.lightDirection = '';
+      state.colorTemp = '';
+      state.ipRating = '';
+      state.widthMin = '';
+      state.widthMax = '';
+      state.heightMin = '';
+      state.heightMax = '';
+      state.channelMin = '';
+      state.channelMax = '';
       filter();
     }
 
