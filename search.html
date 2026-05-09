@@ -88,11 +88,8 @@
     .header-sub { font-size: 13px; opacity: 0.85; white-space: nowrap; }
 
     .controls-bar {
-      position: sticky;
-      top: var(--header-h);
       background: var(--surface);
       border-bottom: 1px solid var(--border);
-      z-index: 90;
       padding: 12px 16px 8px;
     }
 
@@ -194,6 +191,39 @@
     }
 
     .advanced-panel[hidden] { display: none; }
+
+    .filter-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .filter-section + .filter-section {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .filter-section-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .filter-hint {
+      padding: 12px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text-muted);
+      font-size: var(--font-sm);
+    }
+
+    .filter-hint[hidden],
+    .parameter-section[hidden],
+    .filter-field[hidden] {
+      display: none;
+    }
 
     .filter-row {
       display: grid;
@@ -660,71 +690,80 @@
         <span class="toggle-icon" aria-hidden="true">⌄</span>
       </button>
       <div id="advanced-panel" class="advanced-panel" hidden>
-        <div class="filter-row">
-          <div class="filter-field">
-            <label for="filter-category">產品類別</label>
-            <select id="filter-category" class="filter-select" data-filter="category">
-              <option value="">全部類別</option>
-            </select>
-          </div>
-          <div class="filter-field">
-            <label for="filter-scene">適用場景</label>
-            <select id="filter-scene" class="filter-select" data-filter="scene">
-              <option value="">全部場景</option>
-            </select>
-          </div>
-          <div class="filter-field">
-            <label for="filter-mount-method">安裝方式</label>
-            <select id="filter-mount-method" class="filter-select" data-filter="mountMethod">
-              <option value="">全部方式</option>
-            </select>
-          </div>
-          <div class="filter-field">
-            <label for="filter-mount-location">安裝位置</label>
-            <select id="filter-mount-location" class="filter-select" data-filter="mountLocation">
-              <option value="">全部位置</option>
-            </select>
-          </div>
-          <div class="filter-field">
-            <label for="filter-light-direction">出光方向</label>
-            <select id="filter-light-direction" class="filter-select" data-filter="lightDirection">
-              <option value="">全部方向</option>
-            </select>
-          </div>
-          <div class="filter-field">
-            <label for="filter-color-temp">色溫</label>
-            <select id="filter-color-temp" class="filter-select" data-filter="colorTemp">
-              <option value="">全部色溫</option>
-            </select>
-          </div>
-          <div class="filter-field">
-            <label for="filter-ip-rating">IP 防護</label>
-            <select id="filter-ip-rating" class="filter-select" data-filter="ipRating">
-              <option value="">全部 IP</option>
-            </select>
-          </div>
-          <div class="filter-field">
-            <label>外寬 mm</label>
-            <div class="range-pair">
-              <input id="filter-width-min" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最小" data-filter="widthMin">
-              <span class="range-separator">至</span>
-              <input id="filter-width-max" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最大" data-filter="widthMax">
+        <div class="filter-section">
+          <div class="filter-section-title">第一段：選擇產品類別</div>
+          <div class="filter-row">
+            <div class="filter-field">
+              <label for="filter-category">產品類別</label>
+              <select id="filter-category" class="filter-select" data-filter="category">
+                <option value="">請選擇類別</option>
+              </select>
             </div>
           </div>
-          <div class="filter-field">
-            <label>外高 mm</label>
-            <div class="range-pair">
-              <input id="filter-height-min" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最小" data-filter="heightMin">
-              <span class="range-separator">至</span>
-              <input id="filter-height-max" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最大" data-filter="heightMax">
+        </div>
+        <div id="filter-category-hint" class="filter-hint">請先選擇產品類別，再使用相應的參數篩選。</div>
+        <div id="parameter-section" class="filter-section parameter-section" hidden>
+          <div id="parameter-section-title" class="filter-section-title">第二段：此類別可篩選參數</div>
+          <div class="filter-row">
+            <div class="filter-field" data-param-field="scene">
+              <label for="filter-scene">適用場景</label>
+              <select id="filter-scene" class="filter-select" data-filter="scene">
+                <option value="">全部場景</option>
+              </select>
             </div>
-          </div>
-          <div class="filter-field">
-            <label>槽寬 mm</label>
-            <div class="range-pair">
-              <input id="filter-channel-min" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最小" data-filter="channelMin">
-              <span class="range-separator">至</span>
-              <input id="filter-channel-max" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最大" data-filter="channelMax">
+            <div class="filter-field" data-param-field="mountMethod">
+              <label for="filter-mount-method">安裝方式</label>
+              <select id="filter-mount-method" class="filter-select" data-filter="mountMethod">
+                <option value="">全部方式</option>
+              </select>
+            </div>
+            <div class="filter-field" data-param-field="mountLocation">
+              <label for="filter-mount-location">安裝位置</label>
+              <select id="filter-mount-location" class="filter-select" data-filter="mountLocation">
+                <option value="">全部位置</option>
+              </select>
+            </div>
+            <div class="filter-field" data-param-field="lightDirection">
+              <label for="filter-light-direction">出光方向</label>
+              <select id="filter-light-direction" class="filter-select" data-filter="lightDirection">
+                <option value="">全部方向</option>
+              </select>
+            </div>
+            <div class="filter-field" data-param-field="colorTemp">
+              <label for="filter-color-temp">色溫</label>
+              <select id="filter-color-temp" class="filter-select" data-filter="colorTemp">
+                <option value="">全部色溫</option>
+              </select>
+            </div>
+            <div class="filter-field" data-param-field="ipRating">
+              <label for="filter-ip-rating">IP 防護</label>
+              <select id="filter-ip-rating" class="filter-select" data-filter="ipRating">
+                <option value="">全部 IP</option>
+              </select>
+            </div>
+            <div class="filter-field" data-param-field="width">
+              <label>外寬 mm</label>
+              <div class="range-pair">
+                <input id="filter-width-min" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最小" data-filter="widthMin">
+                <span class="range-separator">至</span>
+                <input id="filter-width-max" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最大" data-filter="widthMax">
+              </div>
+            </div>
+            <div class="filter-field" data-param-field="height">
+              <label>外高 mm</label>
+              <div class="range-pair">
+                <input id="filter-height-min" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最小" data-filter="heightMin">
+                <span class="range-separator">至</span>
+                <input id="filter-height-max" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最大" data-filter="heightMax">
+              </div>
+            </div>
+            <div class="filter-field" data-param-field="channel">
+              <label>槽寬 mm</label>
+              <div class="range-pair">
+                <input id="filter-channel-min" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最小" data-filter="channelMin">
+                <span class="range-separator">至</span>
+                <input id="filter-channel-max" class="filter-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="最大" data-filter="channelMax">
+              </div>
             </div>
           </div>
         </div>
@@ -772,6 +811,24 @@
       channelMin: '',
       channelMax: ''
     };
+
+    const PARAMETER_PROFILES = {
+      A: {
+        label: '類別 A 參數',
+        fields: ['scene', 'mountMethod', 'mountLocation', 'width', 'height']
+      },
+      B: {
+        label: '類別 B 參數',
+        fields: ['scene', 'lightDirection', 'colorTemp', 'ipRating', 'width', 'channel']
+      },
+      C: {
+        label: '類別 C 參數',
+        fields: ['mountMethod', 'mountLocation', 'height']
+      }
+    };
+
+    const PROFILE_SEQUENCE = ['A', 'B', 'C'];
+    let categoryProfiles = {};
 
     const DEMO_IMAGE_OVERRIDES = [
       ['參考圖片/ 1.png', '參考圖片/ 2.png'],
@@ -839,6 +896,7 @@
         if (!res.ok) throw new Error('Failed to load products.json');
         const data = await res.json();
         allProducts = Array.isArray(data.products) ? data.products : [];
+        buildCategoryProfiles();
         buildFilterOptions();
         filter();
       } catch (e) {
@@ -847,48 +905,80 @@
       }
     }
 
-    function buildFilterOptions() {
-      const categories = [...new Set(
+    function buildCategoryProfiles() {
+      const categories = getCategories();
+      categoryProfiles = {};
+      categories.forEach((category, index) => {
+        categoryProfiles[category] = PROFILE_SEQUENCE[index % PROFILE_SEQUENCE.length];
+      });
+    }
+
+    function getCategories() {
+      return [...new Set(
         allProducts
           .map(p => p.category)
           .filter(Boolean)
       )].sort();
+    }
+
+    function getSelectedProducts() {
+      if (!state.category) return [];
+      return allProducts.filter(p => p.category === state.category);
+    }
+
+    function getCurrentProfile() {
+      if (!state.category) return null;
+      return PARAMETER_PROFILES[categoryProfiles[state.category]] || PARAMETER_PROFILES.A;
+    }
+
+    function getActiveParamFields() {
+      const profile = getCurrentProfile();
+      return new Set(profile ? profile.fields : []);
+    }
+
+    function buildFilterOptions() {
+      populateSelect('filter-category', getCategories(), '請選擇類別');
+      buildParameterOptions();
+      updateParameterVisibility();
+    }
+
+    function buildParameterOptions() {
+      const sourceProducts = getSelectedProducts();
 
       const methods = [...new Set(
-        allProducts
+        sourceProducts
           .map(p => p.mountMethod)
           .filter(v => v && v !== 'N/A')
           .flatMap(splitFilterParts)
       )].sort();
 
       const locations = [...new Set(
-        allProducts
+        sourceProducts
           .map(p => p.mountLocation)
           .filter(v => v && v !== 'N/A')
           .flatMap(splitFilterParts)
       )].sort();
 
       const scenes = [...new Set(
-        allProducts.flatMap(p => p.sceneList || [])
+        sourceProducts.flatMap(p => p.sceneList || [])
       )].filter(Boolean).sort();
 
       const lightDirections = [...new Set(
-        allProducts
+        sourceProducts
           .map(p => p.lightDirection)
           .filter(v => v && v !== 'N/A')
       )].sort();
 
       const colorTemps = [...new Set(
-        allProducts.flatMap(p => p.colorTempList || [])
+        sourceProducts.flatMap(p => p.colorTempList || [])
       )].filter(Boolean).sort();
 
       const ipRatings = [...new Set(
-        allProducts
+        sourceProducts
           .map(p => p.ipRating)
           .filter(v => v && v !== 'N/A')
       )].sort();
 
-      populateSelect('filter-category', categories, '全部類別');
       populateSelect('filter-mount-method', methods, '全部方式');
       populateSelect('filter-mount-location', locations, '全部位置');
       populateSelect('filter-scene', scenes, '全部場景');
@@ -897,10 +987,42 @@
       populateSelect('filter-ip-rating', ipRatings, '全部 IP');
     }
 
+    function updateParameterVisibility() {
+      const hasCategory = Boolean(state.category);
+      const activeFields = getActiveParamFields();
+      const parameterSection = document.getElementById('parameter-section');
+      const hint = document.getElementById('filter-category-hint');
+      const sectionTitle = document.getElementById('parameter-section-title');
+
+      hint.hidden = hasCategory;
+      parameterSection.hidden = !hasCategory;
+
+      if (hasCategory) {
+        const profileKey = categoryProfiles[state.category] || 'A';
+        const profile = PARAMETER_PROFILES[profileKey] || PARAMETER_PROFILES.A;
+        sectionTitle.textContent = `第二段：${profile.label}（${state.category}）`;
+      }
+
+      document.querySelectorAll('[data-param-field]').forEach(field => {
+        field.hidden = !hasCategory || !activeFields.has(field.dataset.paramField);
+      });
+    }
+
     function populateSelect(id, values, placeholder) {
       const sel = document.getElementById(id);
       sel.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>` +
         values.map(v => `<option value="${escapeAttr(v)}">${escapeHtml(v)}</option>`).join('');
+    }
+
+    function resetParameterFilters() {
+      [
+        'mountMethod', 'mountLocation', 'scene', 'lightDirection',
+        'colorTemp', 'ipRating', 'widthMin', 'widthMax',
+        'heightMin', 'heightMax', 'channelMin', 'channelMax'
+      ].forEach(key => { state[key] = ''; });
+
+      document.querySelectorAll('#parameter-section .filter-select').forEach(s => { s.value = ''; });
+      document.querySelectorAll('#parameter-section .filter-input').forEach(s => { s.value = ''; });
     }
 
     function matchSearch(p, q) {
@@ -914,24 +1036,25 @@
     }
 
     function matchFilters(p) {
+      const activeFields = getActiveParamFields();
       if (state.category && p.category !== state.category) return false;
-      if (state.mountMethod) {
+      if (activeFields.has('mountMethod') && state.mountMethod) {
         const parts = splitFilterParts(p.mountMethod);
         if (!parts.includes(state.mountMethod)) return false;
       }
-      if (state.mountLocation) {
+      if (activeFields.has('mountLocation') && state.mountLocation) {
         const parts = splitFilterParts(p.mountLocation);
         if (!parts.includes(state.mountLocation)) return false;
       }
-      if (state.scene) {
+      if (activeFields.has('scene') && state.scene) {
         if (!(p.sceneList || []).includes(state.scene)) return false;
       }
-      if (state.lightDirection && p.lightDirection !== state.lightDirection) return false;
-      if (state.colorTemp && !(p.colorTempList || []).includes(state.colorTemp)) return false;
-      if (state.ipRating && p.ipRating !== state.ipRating) return false;
-      if (!matchRange(p.widthMm, state.widthMin, state.widthMax)) return false;
-      if (!matchRange(p.heightMm, state.heightMin, state.heightMax)) return false;
-      if (!matchRange(p.channelWidthMm, state.channelMin, state.channelMax)) return false;
+      if (activeFields.has('lightDirection') && state.lightDirection && p.lightDirection !== state.lightDirection) return false;
+      if (activeFields.has('colorTemp') && state.colorTemp && !(p.colorTempList || []).includes(state.colorTemp)) return false;
+      if (activeFields.has('ipRating') && state.ipRating && p.ipRating !== state.ipRating) return false;
+      if (activeFields.has('width') && !matchRange(p.widthMm, state.widthMin, state.widthMax)) return false;
+      if (activeFields.has('height') && !matchRange(p.heightMm, state.heightMin, state.heightMax)) return false;
+      if (activeFields.has('channel') && !matchRange(p.channelWidthMm, state.channelMin, state.channelMax)) return false;
       return true;
     }
 
@@ -1185,6 +1308,11 @@
       document.querySelectorAll('.filter-select').forEach(sel => {
         sel.addEventListener('change', e => {
           state[e.target.dataset.filter] = e.target.value;
+          if (e.target.dataset.filter === 'category') {
+            resetParameterFilters();
+            buildParameterOptions();
+            updateParameterVisibility();
+          }
           filter();
         });
       });
@@ -1244,6 +1372,8 @@
       state.heightMax = '';
       state.channelMin = '';
       state.channelMax = '';
+      buildParameterOptions();
+      updateParameterVisibility();
       filter();
     }
 
